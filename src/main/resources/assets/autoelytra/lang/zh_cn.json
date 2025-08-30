@@ -1,4 +1,4 @@
 {
-  "message.autoelytra.replace_enchanted": "§a[AutoElytra] 鞘翅已自动替换",
-  "message.autoelytra.replace_normal": "§a[AutoElytra] 已自动替换为无附魔鞘翅"
+  "message.autoelytra.replace_success": "[Maple Client] 鞘翅耐久低，已自动替换",
+  "message.autoelytra.replace_failure": "[Maple Client] 找不到可以替换的鞘翅, 鞘翅替换失败!"
 }

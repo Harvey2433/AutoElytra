@@ -1,0 +1,4 @@
+{
+  "message.autoelytra.replace_success": "[Maple Client] Elytra durability low, automatically replaced",
+  "message.autoelytra.replace_failure": "[Maple Client] Cannot find replacement elytra, elytra replacement failed!"
+}

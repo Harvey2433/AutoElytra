@@ -185,7 +185,7 @@ public class ElytraAutoReplaceHandler {
             }
 
             // 替换成功，在聊天栏发送消息
-            player.sendMessage(Text.literal("鞘翅耐久低，已自动替换").formatted(Formatting.GREEN));
+            player.sendMessage(Text.translatable("message.autoelytra.replace_success").formatted(Formatting.GREEN));
         } catch (Exception e) {
             // 发生错误时重置光标
             if (!player.playerScreenHandler.getCursorStack().isEmpty()) {
@@ -211,7 +211,7 @@ public class ElytraAutoReplaceHandler {
         isAlertActive = true; // 标记警报处于活动状态
 
         // 显示大标题（红色）
-        player.sendMessage(Text.literal("鞘翅替换失败！").formatted(Formatting.RED), true);
+        player.sendMessage(Text.translatable("message.autoelytra.replace_failure").formatted(Formatting.RED), true);
     }
 
     private static int convertToNetworkSlot(int inventorySlot) {
