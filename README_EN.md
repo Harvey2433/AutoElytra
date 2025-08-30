@@ -11,15 +11,13 @@ Auto Elytra is a lightweight Minecraft Fabric mod designed for version 1.20.4. I
 - **Automatic Detection**: Real-time monitoring of equipped elytra durability
 - **Smart Replacement**: Prioritizes enchanted elytra with relatively higher durability for replacement
 - **Client-side Implementation**: All operations are performed client-side only, compatible with both singleplayer and multiplayer servers
-- **User-friendly Notifications**: Green chat message on successful replacement, obvious audiovisual alerts on failure
-- **Configurable Threshold**: Default trigger at ≤5 durability (adjustable in code)
 
 ## Requirements
 
 - Minecraft 1.20.4
 - Fabric Loader 0.14.21 or higher
 - Fabric API
-- Java 17 or higher
+- Java 21
 
 ## Installation
 
