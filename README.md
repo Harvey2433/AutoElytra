@@ -18,7 +18,7 @@ Auto Elytra 是一个轻量级的 Minecraft Fabric 模组，专为 1.20.4 版本
 - Minecraft 1.20.4
 - Fabric Loader 0.14.21 或更高版本
 - Fabric API
-- Java 17 或更高版本
+- Java 21
 
 ## 安装方法
 
