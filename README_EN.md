@@ -24,7 +24,7 @@ Auto Elytra is a lightweight Minecraft Fabric mod designed for version 1.20.4. I
 1. Ensure Fabric Loader is installed
 2. Download the latest Auto Elytra mod JAR file
 3. Place the JAR file in Minecraft's `mods` folder
-4. Launch the game and enjoy automatic elytra replacement
+4. Launch the game
 
 ## Usage
 
