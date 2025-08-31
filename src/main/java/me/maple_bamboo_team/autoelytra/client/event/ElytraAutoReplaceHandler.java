@@ -25,11 +25,18 @@ public class ElytraAutoReplaceHandler {
     private static int alertDelay = 0; // 警报延迟计时器
     private static boolean hasTriggeredAlert = false; // 标记是否已触发过警报
     private static boolean isAlertActive = false; // 标记警报是否处于活动状态
+    private static boolean titleCleared = false; // 标记标题是否已清除
     private static final int ALERT_DURATION = 100; // 5秒 (20 ticks/秒 * 5)
     private static final int ALERT_SOUND_INTERVAL = 5; // 每5tick播放一次声音
     private static final int ALERT_DELAY = 20; // 1秒延迟 (20 ticks)
 
     public static void onClientTick(MinecraftClient client) {
+        if (client.player == null) {
+            return;
+        }
+
+        ClientPlayerEntity player = client.player;
+
         if (cooldown > 0) {
             cooldown--;
         }
@@ -40,28 +47,26 @@ public class ElytraAutoReplaceHandler {
 
             // 播放连续急促的经验声音
             if (alertCooldown > 0 && alertSoundCounter <= 0) {
-                if (client.player != null) {
-                    client.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.5F); // 提高音调使其更急促
-                    alertSoundCounter = ALERT_SOUND_INTERVAL;
-                }
+                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.5F);
+                alertSoundCounter = ALERT_SOUND_INTERVAL;
             }
 
             if (alertSoundCounter > 0) {
                 alertSoundCounter--;
             }
 
-            // 警报结束时清除标题
-            if (alertCooldown == 0 && client.player != null) {
-                client.player.sendMessage(Text.empty(), true);
+            // 警报结束时清除标题（只执行一次）
+            if (alertCooldown == 0 && !titleCleared) {
+                clearTitle(player);
+                titleCleared = true;
                 isAlertActive = false;
             }
         }
 
-        if (client.player == null || client.interactionManager == null) {
+        if (client.interactionManager == null) {
             return;
         }
 
-        ClientPlayerEntity player = client.player;
         ItemStack currentElytra = player.getEquippedStack(EquipmentSlot.CHEST);
 
         // 检查当前胸甲是否是鞘翅且耐久低
@@ -97,11 +102,20 @@ public class ElytraAutoReplaceHandler {
 
     private static void resetAlertState(ClientPlayerEntity player) {
         alertDelay = 0;
+        if (isAlertActive) {
+            // 只在警报活动时清除标题
+            clearTitle(player);
+        }
         alertCooldown = 0;
         isAlertActive = false;
         hasTriggeredAlert = false;
+        titleCleared = false;
+    }
+
+    private static void clearTitle(ClientPlayerEntity player) {
         if (player != null) {
             player.sendMessage(Text.empty(), true);
+            System.out.println("[AutoElytra] Title cleared");
         }
     }
 
@@ -132,26 +146,34 @@ public class ElytraAutoReplaceHandler {
 
         // 优先选择有附魔的鞘翅，按耐久度降序排序
         if (!enchantedCandidates.isEmpty()) {
-            enchantedCandidates.sort(Comparator.comparing(ElytraCandidate::durability).reversed());
-            return enchantedCandidates.get(0).slot();
+            enchantedCandidates.sort(Comparator.comparing(ElytraCandidate::getDurability).reversed());
+            System.out.println("[AutoElytra] Found " + enchantedCandidates.size() + " enchanted elytra candidates");
+            return enchantedCandidates.get(0).getSlot();
         }
 
         // 如果没有附魔鞘翅，选择耐久度最高的普通鞘翅
         if (!normalCandidates.isEmpty()) {
-            normalCandidates.sort(Comparator.comparing(ElytraCandidate::durability).reversed());
-            return normalCandidates.get(0).slot();
+            normalCandidates.sort(Comparator.comparing(ElytraCandidate::getDurability).reversed());
+            System.out.println("[AutoElytra] Found " + normalCandidates.size() + " normal elytra candidates");
+            return normalCandidates.get(0).getSlot();
         }
 
+        System.out.println("[AutoElytra] No suitable elytra found in inventory");
         return -1;
     }
 
     private static void replaceElytra(MinecraftClient client, ClientPlayerEntity player, int newElytraSlot) {
         ClientPlayerInteractionManager interactionManager = client.interactionManager;
-        if (interactionManager == null) return;
+        if (interactionManager == null) {
+            System.out.println("[AutoElytra] Interaction manager is null");
+            return;
+        }
 
         // 计算网络槽位ID
         int sourceSlot = convertToNetworkSlot(newElytraSlot);
         int armorSlot = 6; // 胸甲槽位在网络包中的ID
+
+        System.out.println("[AutoElytra] Attempting to replace elytra from slot " + newElytraSlot + " (network slot: " + sourceSlot + ")");
 
         // 使用PICKUP和QUICK_MOVE来模拟拖放操作
         try {
@@ -184,22 +206,28 @@ public class ElytraAutoReplaceHandler {
                 );
             }
 
-            // 替换成功，在聊天栏发送消息
+            // 替换成功，在聊天栏发送本地化消息
             player.sendMessage(Text.translatable("message.autoelytra.replace_success").formatted(Formatting.GREEN));
+            System.out.println("[AutoElytra] Elytra replacement successful");
+
         } catch (Exception e) {
+            System.out.println("[AutoElytra] Error during elytra replacement: " + e.getMessage());
+
             // 发生错误时重置光标
             if (!player.playerScreenHandler.getCursorStack().isEmpty()) {
-                interactionManager.clickSlot(
-                        player.playerScreenHandler.syncId,
-                        -999, // 点击屏幕外区域丢弃或取消
-                        0,
-                        SlotActionType.PICKUP,
-                        player
-                );
+                try {
+                    interactionManager.clickSlot(
+                            player.playerScreenHandler.syncId,
+                            -999, // 点击屏幕外区域丢弃或取消
+                            0,
+                            SlotActionType.PICKUP,
+                            player
+                    );
+                    System.out.println("[AutoElytra] Cursor reset after error");
+                } catch (Exception ex) {
+                    System.out.println("[AutoElytra] Failed to reset cursor: " + ex.getMessage());
+                }
             }
-
-            // 替换操作失败，但不触发警报（静默重试）
-            // 只有在确实找不到可替换鞘翅时才触发警报
         }
     }
 
@@ -209,9 +237,11 @@ public class ElytraAutoReplaceHandler {
         alertSoundCounter = 0; // 立即播放第一次声音
         hasTriggeredAlert = true; // 标记已触发警报
         isAlertActive = true; // 标记警报处于活动状态
+        titleCleared = false; // 重置标题清除状态
 
-        // 显示大标题（红色）
+        // 显示大标题（红色）使用本地化文本
         player.sendMessage(Text.translatable("message.autoelytra.replace_failure").formatted(Formatting.RED), true);
+        System.out.println("[AutoElytra] Triggered failure alert - will last for " + (ALERT_DURATION / 20) + " seconds");
     }
 
     private static int convertToNetworkSlot(int inventorySlot) {
@@ -229,6 +259,27 @@ public class ElytraAutoReplaceHandler {
     }
 
     // 辅助类，用于存储鞘翅候选信息
-        private record ElytraCandidate(int slot, int durability, boolean hasEnchantments) {
+    private static class ElytraCandidate {
+        private final int slot;
+        private final int durability;
+        private final boolean hasEnchantments;
+
+        public ElytraCandidate(int slot, int durability, boolean hasEnchantments) {
+            this.slot = slot;
+            this.durability = durability;
+            this.hasEnchantments = hasEnchantments;
+        }
+
+        public int getSlot() {
+            return slot;
+        }
+
+        public int getDurability() {
+            return durability;
+        }
+
+        public boolean hasEnchantments() {
+            return hasEnchantments;
+        }
     }
 }
