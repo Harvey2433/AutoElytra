@@ -25,7 +25,7 @@ Auto Elytra 是一个轻量级的 Minecraft Fabric 模组，专为 1.20.4 版本
 1. 确保已安装 Fabric Loader
 2. 下载最新版本的 Auto Elytra mod JAR 文件
 3. 将 JAR 文件放入 Minecraft 的 `mods` 文件夹中
-4. 启动游戏并享受自动鞘翅替换功能
+4. 启动游戏即可
 
 ## 使用说明
 
