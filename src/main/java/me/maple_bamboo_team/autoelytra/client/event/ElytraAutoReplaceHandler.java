@@ -195,7 +195,7 @@ public class ElytraAutoReplaceHandler {
     private static void exitGame(MinecraftClient client) {
         // 发送退出消息
         if (client.player != null) {
-            client.player.sendMessage(Text.translatable("message.autoelytra.replace_failure"));
+            client.player.sendMessage(Text.translatable("message.autoelytra.no_more_elytra"));
         }
 
         // 延迟1秒后退出游戏
@@ -276,7 +276,7 @@ public class ElytraAutoReplaceHandler {
             return normalCandidates.get(0).getSlot();
         }
 
-        System.out.println("[AutoElytra] No suitable elytra found in inventory");
+        //System.out.println("[AutoElytra] No suitable elytra found in inventory");
         return -1;
     }
 
@@ -325,7 +325,7 @@ public class ElytraAutoReplaceHandler {
             }
 
             // 替换成功，在聊天栏发送本地化消息
-            player.sendMessage(Text.translatable("message.autoelytra.replace_success").formatted(Formatting.AQUA));
+            player.sendMessage(Text.translatable("message.autoelytra.replace_success"));
             System.out.println("[AutoElytra] Elytra replacement successful");
             return true;
 
