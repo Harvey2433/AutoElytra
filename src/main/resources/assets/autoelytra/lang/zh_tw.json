@@ -1,4 +1,10 @@
 {
-  "message.autoelytra.replace_success": "[Maple Client] 鞘翅耐久低，已自動替換",
-  "message.autoelytra.replace_failure": "[Maple Client] 找不到可以替換的鞘翅, 鞘翅替換失敗!"
+  "message.autoelytra.replace_success": "§b[Maple Client] 鞘翅耐久度低，已自動替換",
+  "message.autoelytra.replace_failure": "§b[Maple Client] §c找不到可以替換的鞘翅，鞘翅替換失敗！",
+  "message.autoelytra.no_more_elytra": "§b[Maple Client] §c檢測到無可用鞘翅，正在退出到主選單",
+  "message.autoelytra.config.onautoexit": "§b[Maple Client] §r無可用鞘翅自動退出§a已啟用",
+  "message.autoelytra.config.offautoexit": "§b[Maple Client] §r無可用鞘翅自動退出§a已停用",
+  "message.autoelytra.config.autoexitstatus": "§b[Maple Client] §f自動退出功能：",
+  "message.autoelytra.config.setautoexitvalue": "§b[Maple Client] §f已設定耐久臨界值為：",
+  "message.autoelytra.config.getautoexitvalue": "§b[Maple Client] 當前耐久臨界值：§f"
 }

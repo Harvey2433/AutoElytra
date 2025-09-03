@@ -1,4 +1,10 @@
 {
-  "message.autoelytra.replace_success": "[Maple Client] Elytra durability low, automatically replaced",
-  "message.autoelytra.replace_failure": "[Maple Client] Cannot find replacement elytra, elytra replacement failed!"
+  "message.autoelytra.replace_success": "§b[Maple Client] Elytra durability low, automatically replaced",
+  "message.autoelytra.replace_failure": "§b[Maple Client] §cCannot find a replacement elytra, elytra replacement failed!",
+  "message.autoelytra.no_more_elytra": "§b[Maple Client] §cNo available elytra detected, exiting to main menu",
+  "message.autoelytra.config.onautoexit": "§b[Maple Client] §rAuto exit when no elytra available§a enabled",
+  "message.autoelytra.config.offautoexit": "§b[Maple Client] §rAuto exit when no elytra available§a disabled",
+  "message.autoelytra.config.autoexitstatus": "§b[Maple Client] §fAuto exit function: ",
+  "message.autoelytra.config.setautoexitvalue": "§b[Maple Client] §fSet durability threshold to: ",
+  "message.autoelytra.config.getautoexitvalue": "§b[Maple Client] Current durability threshold: §f"
 }
